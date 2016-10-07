@@ -1,0 +1,30 @@
+import socket               # Import socket module
+
+
+serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)         # Create a socket object
+server_address = (socket.gethostname(), 10000)  # address is localhost and port is 10000
+print('starting up on %s port %s' % server_address)
+serverSocket.bind(server_address)        # Bind to the port
+
+                                       #Put the socket into server mode and accept incoming connection
+serverSocket.listen(5)                 # Now wait for client connection.
+while True:
+   print('waiting for a connection')         #Wait for a connection
+   connection, client_address = serverSocket.accept()     # Establish connection with client.
+
+   try:
+      print(' connection from', client_address)
+      while True:
+          data = connection.recv(16)                     # receive 16 bytes
+          print ('receiver "%s"' % data)
+          if data:
+             print('sending data back to client')
+             connection.sendall(data);                   #transmit data
+          else:
+            print ('no more data from', client_address)
+            break
+
+   finally:
+      connection.close()                # Close the connection
+
+
