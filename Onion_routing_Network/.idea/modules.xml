@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Socket testing.iml" filepath="$PROJECT_DIR$/.idea/Socket testing.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/OnionRoutingTest.iml" filepath="$PROJECT_DIR$/.idea/OnionRoutingTest.iml" />
     </modules>
   </component>
 </project>
