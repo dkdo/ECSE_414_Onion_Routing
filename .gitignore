@@ -1,5 +1,10 @@
-# Ignore compiled python code
+#compiled files
 *.pyc
 
-# William's special request
-*.idea
+#System Files
+*.DS_Store
+*._*
+
+#IDE files
+.idea/
+
