@@ -36,7 +36,7 @@ proxyOnionThread.start()
 
 # create Client
 clientPort = 300
-message = "5"
+message = "potato"
 client = Application.Application(clientPort,proxyServerAddress,message)
 client.connectToServer()
 

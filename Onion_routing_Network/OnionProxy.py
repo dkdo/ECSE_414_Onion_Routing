@@ -35,11 +35,13 @@ class onionProxyHandler(SocketServer.BaseRequestHandler):
 
         process = self.validRequest(data)
         if process:
-            self.assembleOnion(data)
-            self.createPath()
-            self.sendToEntryFunnel(data,self.entryFunnelAddress)
-            response = "Sending the onion to the entry funnel\n"
-            self.request.send(response)
+            message = "SENDING THIS POTATO BACK"
+            self.request.send(message) # send back data to proxy
+            #self.assembleOnion(data)
+            #self.createPath()
+            #self.sendToEntryFunnel(data,self.entryFunnelAddress)
+            #response = "Sending the onion to the entry funnel\n"
+            #self.request.send(response)
 
         else:
             error = "The format of the message is not correct, please resend\n"

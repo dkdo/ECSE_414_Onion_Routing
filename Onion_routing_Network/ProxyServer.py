@@ -7,6 +7,7 @@ import time
 class ProxyServerHandler(SocketServer.BaseRequestHandler):
     buffer = 1024
     listOfThreadsWaitingForResponse = []
+    onionSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # Find way to acquire onion Address
     onionAddress = ('localhost', 200)
 
@@ -18,9 +19,8 @@ class ProxyServerHandler(SocketServer.BaseRequestHandler):
             return False
 
     def sendToOnionProxy(self,data,OnionAddress):
-        onionSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        onionSocket.connect(OnionAddress)
-        onionSocket.send(data)
+        self.onionSocket.connect(OnionAddress)
+        self.onionSocket.send(data)
 
     def waitingThreads(self):
         print "Number of Waiting Threads currently :",len(self.listOfThreads), "\n"
@@ -37,10 +37,13 @@ class ProxyServerHandler(SocketServer.BaseRequestHandler):
         process = self.validRequest(data) # if message was a string then proceed to sending it to onion proxy
 
         if (process):
-            response = "The message is being transmitted to the onion proxy\n"
+            print "The message is being transmitted to the onion proxy\n"
             self.sendToOnionProxy(data, self.onionAddress)
             time.sleep(50.0 / 1000.0); # something thread just delete before sending . Slowing the program down
-            self.request.send(response)
+            onionResponse = self.onionSocket.recv(1024)
+            #time.sleep(50.0 / 1000.0);
+            self.request.send(onionResponse)
+
 
         else:
             error = "The format is not correct, please resend\n"
