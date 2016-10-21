@@ -1,0 +1,10 @@
+#compiled files
+*.pyc
+
+#System Files
+*.DS_Store
+*._*
+
+#IDE files
+.idea/
+
