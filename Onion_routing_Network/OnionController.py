@@ -4,6 +4,7 @@ import OnionProxy
 import ProxyServer
 import Application
 import OnionRoutingNetwork
+import random
 
 #Need capability to write raw input into functions (later)
 
@@ -33,12 +34,26 @@ proxyServerThread.start()
 proxyOnionThread.setDaemon(True)
 proxyOnionThread.start()
 
+#create nodes for the network graphic
+
+
+#Generate nodes for the graph
+
+portList = []
+for i in range(100):
+    portList.append(i)
+
+for i in range(20):
+    address = ('localhost', portList[i])
+    OnionRoutingNetwork.OnionRouter(address)
 
 # create Client
 clientPort = 300
-message = "potato"
+message = "7"
 client = Application.Application(clientPort,proxyServerAddress,message)
 client.connectToServer()
+
+print threading.active_count()
 
 #client2 = Application.Application(clientPort,proxyServerAddress,message)
 #client2.connectToServer()
