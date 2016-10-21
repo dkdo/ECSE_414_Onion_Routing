@@ -1,10 +1,14 @@
 import SocketServer
 import OnionRoutingNetwork
+import threading
 
 class onionProxyHandler(SocketServer.BaseRequestHandler):
     buffer = 1024
     #Find the funnel address
     entryFunnelAddress = ()
+
+    def waitingThreads(self):
+        print  "Number of Waiting Threads currently :", len(self.listOfThreads), "\n"
 
     def validRequest(self, request):
         if (request.isdigit()):
@@ -26,15 +30,22 @@ class onionProxyHandler(SocketServer.BaseRequestHandler):
 
     def handle(self):
         data = self.request.recv(self.buffer)
-        print "Received request\n"
+        cur_thread = threading.current_thread()
+        print "Received request from the Proxy Server\n"
 
-        if self.validRequest(data):
+        process = self.validRequest(data)
+        if process:
             self.assembleOnion(data)
             self.createPath()
-            self.sendToEntryFunnel(self.entryFunnelAddress)
+            self.sendToEntryFunnel(data,self.entryFunnelAddress)
+            response = "Sending the onion to the entry funnel\n"
+            self.request.send(response)
 
         else:
-            error = "The format of the message is not correct, please resend"
-            data = self.request.send(error)
+            error = "The format of the message is not correct, please resend\n"
+            self.request.send(error)
 
         return
+
+class ThreadedProxyOnion(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
+    pass

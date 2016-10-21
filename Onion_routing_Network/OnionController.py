@@ -13,13 +13,13 @@ import OnionRoutingNetwork
 proxyHandler = ProxyServer.ProxyServerHandler
 proxyServerPort = 150
 proxyServerAddress = ('localhost', proxyServerPort)
-proxyServer = SocketServer.TCPServer(proxyServerAddress, proxyHandler)
+proxyServer = ProxyServer.ThreadedProxyServer(proxyServerAddress, proxyHandler)
 
 # create onion proxy
 proxyOnionHandler = OnionProxy.onionProxyHandler
 proxyOnionPort = 200
 proxyOnionAddress = ('localhost', proxyOnionPort)
-proxyOnion = SocketServer.TCPServer(proxyOnionAddress, proxyOnionHandler)
+proxyOnion = OnionProxy.ThreadedProxyOnion(proxyOnionAddress, proxyOnionHandler)
 
 
 proxyServerThread = threading.Thread(target = proxyServer.serve_forever)
@@ -33,14 +33,14 @@ proxyServerThread.start()
 proxyOnionThread.setDaemon(True)
 proxyOnionThread.start()
 
+
 # create Client
 clientPort = 300
-client = Application.Application(clientPort)
-client.connectToServerSocket(proxyServerAddress)
+message = "5"
+client = Application.Application(clientPort,proxyServerAddress,message)
+client.connectToServer()
 
-#sending message Client to Proxy Server
+#client2 = Application.Application(clientPort,proxyServerAddress,message)
+#client2.connectToServer()
 
-message = "1"
-client.displayClientAddress()
-client.sendMessage(message)
-client.receivedMessage()
+
