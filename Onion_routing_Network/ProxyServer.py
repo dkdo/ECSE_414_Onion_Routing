@@ -13,6 +13,7 @@ class ProxyServerHandler(SocketServer.BaseRequestHandler):
 
     # testing a valid message
     def validRequest(self,request):
+        #if (request.split('|')[1].isdigit()):
         if (request.isdigit()):
             return True
         else:
@@ -33,7 +34,6 @@ class ProxyServerHandler(SocketServer.BaseRequestHandler):
 
 
         self.listOfThreadsWaitingForResponse.append(cur_thread)
-
         process = self.validRequest(data) # if message was a string then proceed to sending it to onion proxy
 
         if (process):
