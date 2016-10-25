@@ -1,0 +1,5 @@
+# Ignore compiled python code
+*.pyc
+
+# William's special request
+*.idea
