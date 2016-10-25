@@ -53,8 +53,3 @@ class OnionRouterHandler(SocketServer.BaseRequestHandler):
 
 class ThreadedOnionRouter(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     pass
-
-
-
-
-

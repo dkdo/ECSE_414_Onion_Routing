@@ -62,7 +62,3 @@ print threading.active_count()
 
 #client2 = Application.Application(clientPort,proxyServerAddress,message)
 #client2.connectToServer()
-
-
-
-
