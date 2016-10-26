@@ -6,6 +6,7 @@ import Application
 import OnionRoutingNetwork
 import random
 from Graph import generateGraph, findPaths
+import json
 
 #Need capability to write raw input into functions (later)
 
@@ -47,15 +48,20 @@ for key in network:
 
 # create Client
 clientPort = 300
+
 #Choose a random port as destination and add it to the message (default start is 0)
 dest = random.randint(2,len(network))
 
 path = findPaths(network, 1, dest)
 print "Sending message through", max(path)
 
-message = ''.join(str(w) for w in max(path))
+message = "Is this a potato?"
 
-client = Application.Application(clientPort,proxyServerAddress,message)
+data = {"Path" : max(path), "Message" : message}
+
+send = json.dumps(data);
+
+client = Application.Application(clientPort,proxyServerAddress,send)
 client.connectToServer()
 
 print threading.active_count()

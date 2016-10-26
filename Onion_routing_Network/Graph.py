@@ -36,3 +36,5 @@ def generateGraph (nodes, vertex):
                 graph[x].append(i)
 
     return graph
+
+

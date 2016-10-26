@@ -11,13 +11,9 @@ class ProxyServerHandler(SocketServer.BaseRequestHandler):
     # Find way to acquire onion Address
     onionAddress = ('localhost', 200)
 
-    # testing a valid message
+    # TODO
     def validRequest(self,request):
-        #if (request.split('|')[1].isdigit()):
-        if (request.isdigit()):
             return True
-        else:
-            return False
 
     def sendToOnionProxy(self,data,OnionAddress):
         self.onionSocket.connect(OnionAddress)
@@ -26,13 +22,10 @@ class ProxyServerHandler(SocketServer.BaseRequestHandler):
     def waitingThreads(self):
         print "Number of Waiting Threads currently :",len(self.listOfThreads), "\n"
 
-
     def handle(self):
         print "Received request from client\n"
         cur_thread = threading.current_thread()
         data = self.request.recv(self.buffer)
-
-
         self.listOfThreadsWaitingForResponse.append(cur_thread)
         process = self.validRequest(data) # if message was a string then proceed to sending it to onion proxy
 
@@ -43,7 +36,6 @@ class ProxyServerHandler(SocketServer.BaseRequestHandler):
             onionResponse = self.onionSocket.recv(1024)
             #time.sleep(50.0 / 1000.0);
             self.request.send(onionResponse)
-
 
         else:
             error = "The format is not correct, please resend\n"

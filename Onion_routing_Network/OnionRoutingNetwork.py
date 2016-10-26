@@ -2,6 +2,8 @@ import threading
 import SocketServer
 import time
 import socket
+import json
+from Encrypt import encrypt, decrypt
 
 class OnionRouter():
     address =0
@@ -29,19 +31,24 @@ class OnionRouterHandler(SocketServer.BaseRequestHandler):
         cur_thread = threading.current_thread()
         data = self.request.recv(self.buffer)
 
+        onion = json.loads(data)
+
+        #How does each node know what key to use?
+        onion = decrypt(onion, 1)
+
         #If Still more nodes to traverse
-        if (data != "EMPTY"):
+        if "IP" in onion:
         #Read information
-            print "Sending to", data[:1]
+            print "Sending to", onion["IP"]
             nodeSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            nodeAddress = ("localhost", int(data[:1]))
+            nodeAddress = ("localhost", onion["IP"])
             nodeSocket.connect(nodeAddress)
-            if (len(data[1:]) == 0):
-                data = "IEMPTY"
-            nodeSocket.send(data[1:])
+            nodeSocket.send(json.dumps(onion["data"]))
 
             time.sleep(50.0 / 1000.0) # something thread just delete before sending . Slowing the program down
             response = nodeSocket.recv(1024)
+            # How does each node know what key to use?
+            response = encrypt(response, 1)
             self.request.send(response)
 
         #Message has reached destination
