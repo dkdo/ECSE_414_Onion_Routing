@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #compiled files
 *.pyc
 
@@ -8,3 +9,10 @@
 #IDE files
 .idea/
 
+=======
+# Ignore compiled python code
+*.pyc
+
+# William's special request
+*.idea
+>>>>>>> graph_generator

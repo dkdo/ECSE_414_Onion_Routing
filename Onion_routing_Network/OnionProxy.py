@@ -1,50 +1,60 @@
 import SocketServer
 import OnionRoutingNetwork
 import threading
+import time
+import socket
+from Encrypt import encrypt, decrypt
+import json
 
 class onionProxyHandler(SocketServer.BaseRequestHandler):
     buffer = 1024
     #Find the funnel address
-    entryFunnelAddress = ()
+    entrySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     def waitingThreads(self):
         print  "Number of Waiting Threads currently :", len(self.listOfThreads), "\n"
 
+    #TODO
     def validRequest(self, request):
-        if (request.isdigit()):
-            return True
-        else:
-            return False
+       return True
 
-    # TO DO
-    def sendToEntryFunnel(self,request,Address):
-        return
+    def sendToEntryFunnel(self,data):
+        print "Sending to entry funnel", data["IP"]
+        entryFunnelAddress = ('localhost', data["IP"])
+        self.entrySocket.connect(entryFunnelAddress)
+        self.entrySocket.send(json.dumps(data["data"]))
 
-     #TO DO
+        time.sleep(50.0 / 1000.0);  # something thread just delete before sending . Slowing the program down
+        response = self.entrySocket.recv(1024)
+        return response
+
     def assembleOnion(self,request):
-        return
+        onion = request ["Message"]
+        for key in reversed(request["Path"]):
+            onion = encrypt({"IP" : key, "data": onion}, key)
+        return onion
 
-    #To do
-    def createPath(self):
-        return
+    def peelOnion (self, request, onion):
+        for key in request["Path"]:
+            onion = decrypt(onion, key)
+        return onion
 
     def handle(self):
         data = self.request.recv(self.buffer)
         cur_thread = threading.current_thread()
         print "Received request from the Proxy Server\n"
 
-        process = self.validRequest(data)
+        message = json.loads(data)
+
+        process = self.validRequest(message)
         if process:
-            message = "SENDING THIS POTATO BACK"
-            self.request.send(message) # send back data to proxy
-            #self.assembleOnion(data)
-            #self.createPath()
-            #self.sendToEntryFunnel(data,self.entryFunnelAddress)
-            #response = "Sending the onion to the entry funnel\n"
-            #self.request.send(response)
+            onion = self.assembleOnion(message)
+            response =  self.sendToEntryFunnel(onion)
+            response = self.peelOnion(message, response)
+            self.request.send(json.dumps(response))
 
         else:
-            error = "The format of the message is not correct, please resend\n"
+            error = "The format of the message is not correct, please resend!\n"
             self.request.send(error)
 
         return

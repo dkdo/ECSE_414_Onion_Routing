@@ -1,4 +1,5 @@
 import socket
+import json
 
 class Application:
     port = 0
@@ -20,6 +21,7 @@ class Application:
         try:
             self.clientSocket.sendall(self.message)
             response = self.clientSocket.recv(1024)
+            response = json.loads(response)
             print "Received: {}".format(response)
         finally:
             self.clientSocket.close()
