@@ -1,4 +1,8 @@
-<<<<<<< HEAD
+# Ignore compiled python code
+*.pyc
+
+# William's special request
+*.idea
 #compiled files
 *.pyc
 
@@ -6,13 +10,4 @@
 *.DS_Store
 *._*
 
-#IDE files
-.idea/
 
-=======
-# Ignore compiled python code
-*.pyc
-
-# William's special request
-*.idea
->>>>>>> graph_generator

@@ -1,21 +1,22 @@
-def generate_graph():
-    with open('test.brite') as f:
+def generate_graph(brite_file):
+    with open(brite_file) as f:
         content = f.readlines()
-    node_reading = False
+
     edge_reading = False
     graph = {}
+
     for line in content:
         if 'Nodes:' in line:
             for token in line.split():
+                # the wanted line will be similar to Nodes: ( 5 )
                 if token.isdigit():
                     for i in range(0, int(token)):
                         graph[i] = []
                     break
         if edge_reading:
+            # the edges are stored as:
+            # edgeid from_node to_node etc...
             tokens = line.split()
-            print '\nin edge reading'
-            for token in tokens:
-                print token
             graph[int(tokens[1])].append(int(tokens[2]))
             graph[int(tokens[2])].append(int(tokens[1]))
         if 'Edges:' in line:
@@ -23,12 +24,4 @@ def generate_graph():
         if '\n' == line:
             edge_reading = False
 
-    print '\ngraph'
-    print graph
-    for node, edges in graph.items():
-        if node == 0:
-            print node
-            print ': '
-            print edges
-
-generate_graph()
+    return graph
