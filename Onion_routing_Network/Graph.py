@@ -37,4 +37,29 @@ def generateGraph (nodes, vertex):
 
     return graph
 
+#find the shortest path between 2 nodes in the graph
+def shortest_path(graph, src, dest, path=[],counter=0):
+    path = path + [src]
 
+    if src == dest:
+        return path
+    
+    if not graph.has_key(src):
+        return None
+
+    shortest = None
+
+    for node in graph[src]:
+        if node not in path:
+            print path 
+            newpath = shortest_path(graph, node, dest, path)
+            print "after" + str(newpath)
+            if newpath:
+                if not shortest or len(newpath) < len(shortest):
+                    shortest = newpath
+                    print "Shortest " + str(shortest)
+
+    return shortest
+    
+
+   
