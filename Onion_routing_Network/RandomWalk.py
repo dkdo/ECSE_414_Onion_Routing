@@ -1,12 +1,13 @@
-import networkx as nx
 import random
+import Graph as graphUtils
 
 
-
+# taking graph G as a dictionary
+# SRC and DEST are nodes
 def randomWalk( G , SRC , DEST ):
 
-    minHops = 7
-    maxHops = 2 * 11    #2 times total of nodes
+    minHops = len(graphUtils.shortest_path(G, SRC, DEST))   
+    maxHops = 2 * len(G.keys())    #2 times total of nodes
     Length = random.randint(minHops, maxHops)   #Randomly select a route length
 
     LengthFromSrc = 0
@@ -26,15 +27,15 @@ def randomWalk( G , SRC , DEST ):
         Next = random.choice(("RandWalkFromSrc", "RandWalkFromDest"))
         
         if (Next == "RandWalkFromSrc"):
-            maxNeighbors = len(G.neighbors(X))
-            Z = G.neighbors(X)[random.randint(0,maxNeighbors-1)]    # Randomly select an adjacent node from X
-            shortest_path_ZtoY = nx.shortest_path(G,Z,Y)
+            maxNeighbors = len(G[X])
+            Z = G[X][random.randint(0,maxNeighbors-1)]    # Randomly select an adjacent node from X
+            shortest_path_ZtoY = graphUtils.shortest_path(G,Z,Y)
             shortest_path = shortest_path_ZtoY[1:len(shortest_path_ZtoY)-1]
             TotalNumberHops = 1 + LengthFromSrc + LengthFromDest + len(shortest_path)
 
             if TotalNumberHops > Length:
                 # print "BACK UP"
-                shortest_path_ZtoY = nx.shortest_path(G,X,Y)
+                shortest_path_ZtoY = graphUtils.shortest_path(G,X,Y)
                 # print shortest_path_ZtoY
                 shortest_path = shortest_path_ZtoY[1:len(shortest_path_ZtoY)-1]
                 break
@@ -44,16 +45,16 @@ def randomWalk( G , SRC , DEST ):
             LengthFromSrc+=1
 
         else: # Next = RandWalkFromDest
-            maxNeighbors = len(G.neighbors(Y))
-            Z = G.neighbors(Y)[random.randint(0,maxNeighbors-1)]    # Randomly select an adjacent node from X
-            shortest_path_ZtoX = nx.shortest_path(G,X,Z)
+            maxNeighbors = len(G[Y])
+            Z = G[Y][random.randint(0,maxNeighbors-1)]    # Randomly select an adjacent node from X
+            shortest_path_ZtoX = graphUtils.shortest_path(G,X,Z)
             shortest_path = shortest_path_ZtoX[1:len(shortest_path_ZtoX)-1]
             TotalNumberHops = 1 + LengthFromSrc + LengthFromDest + len(shortest_path)
 
             #Next step would have to many hops, so we backtrack
             if TotalNumberHops > Length:
                 # print " BACK DOWN"
-                shortest_path_ZtoX = nx.shortest_path(G,X,Y)
+                shortest_path_ZtoX = graphUtils.shortest_path(G,X,Y)
                 # print shortest_path_ZtoX
                 shortest_path = shortest_path_ZtoX[1:len(shortest_path_ZtoX)-1]
                 break
@@ -83,17 +84,17 @@ def randomWalk( G , SRC , DEST ):
 # print "Path : " + str(path)
 
 # Constructing the graph
-G = nx.Graph()
-node=6 
-nodes = (1,2,3,4,5,6,7,8,9,10,11)
-edges = ((1,2),(2,3),(2,5),(3,4),(3,6),(5,8),(5,6),(4,7),(6,7),(6,9),(8,9),(7,10),(9,10),(10,11))
-G.add_nodes_from(nodes)
-G.add_edges_from(edges)
+# G = nx.Graph()
+# node=6 
+# nodes = (1,2,3,4,5,6,7,8,9,10,11)
+# edges = ((1,2),(2,3),(2,5),(3,4),(3,6),(5,8),(5,6),(4,7),(6,7),(6,9),(8,9),(7,10),(9,10),(10,11))
+# G.add_nodes_from(nodes)
+# G.add_edges_from(edges)
 
-SRC = 1
-DEST = 11
+# SRC = 1
+# DEST = 11
 
-print randomWalk(G, SRC, DEST)
+# print randomWalk(, SRC, DEST)
 
 #print "Current nodes " + str(G.nodes()) + " length : " + str(len(G.nodes()))
 #print "Current edges " + str(G.edges()) + " length : " + str(len(G.edges()))

@@ -1,8 +1,14 @@
 import GraphGenerator as GG
 import Graph as G
+import RandomWalk
 
 graph = GG.generate_graph("ok.brite")
+src = 0
+dest = 4
 print graph
-print G.shortest_path(graph,0,4)
-if graph:
-    print "hello"
+print "src : " + str(src)
+print "dest : " + str(dest)
+
+
+
+print RandomWalk.randomWalk(graph,src,dest)

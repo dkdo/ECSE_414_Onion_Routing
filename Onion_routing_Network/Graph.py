@@ -51,13 +51,13 @@ def shortest_path(graph, src, dest, path=[],counter=0):
 
     for node in graph[src]:
         if node not in path:
-            print path 
+            # print path 
             newpath = shortest_path(graph, node, dest, path)
-            print "after" + str(newpath)
+            # print "after" + str(newpath)
             if newpath:
                 if not shortest or len(newpath) < len(shortest):
                     shortest = newpath
-                    print "Shortest " + str(shortest)
+                    # print "Shortest " + str(shortest)
 
     return shortest
     
