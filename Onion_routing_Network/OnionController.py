@@ -5,6 +5,7 @@ import ProxyServer
 import Application
 import OnionRoutingNetwork
 import random
+import RandomWalk
 from Graph import generateGraph, findPaths
 import json
 
@@ -13,7 +14,7 @@ import json
 #Put this in functions laters
 
 #Create Graph
-network = generateGraph(9,4)
+network = generateGraph(100,4)
 
 # create proxy server
 proxyHandler = ProxyServer.ProxyServerHandler
@@ -52,12 +53,12 @@ clientPort = 300
 #Choose a random port as destination and add it to the message (default start is 0)
 dest = random.randint(2,len(network))
 
-path = findPaths(network, 1, dest)
-print "Sending message through", max(path)
+path = RandomWalk.randomWalk(network,1,dest)
+print "Sending message through", path
 
 message = "Is this a potato?"
 
-data = {"Path" : max(path), "Message" : message}
+data = {"Path" : path , "Message" : message}
 
 send = json.dumps(data);
 

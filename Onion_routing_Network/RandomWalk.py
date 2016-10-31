@@ -6,7 +6,7 @@ import Graph as graphUtils
 # SRC and DEST are nodes
 def randomWalk( G , SRC , DEST ):
 
-    minHops = len(graphUtils.shortest_path(G, SRC, DEST))   
+    minHops = len(graphUtils.shortest_path(G, SRC, DEST))
     maxHops = 2 * len(G.keys())    #2 times total of nodes
     Length = random.randint(minHops, maxHops)   #Randomly select a route length
 

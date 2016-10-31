@@ -2,8 +2,9 @@ import GraphGenerator as GG
 import Graph as G
 import RandomWalk
 
-graph = GG.generate_graph("ok.brite")
-src = 0
+#graph = GG.generate_graph("test.brite")
+graph = G.generateGraph(100,5)
+src = 1
 dest = 4
 print graph
 print "src : " + str(src)
