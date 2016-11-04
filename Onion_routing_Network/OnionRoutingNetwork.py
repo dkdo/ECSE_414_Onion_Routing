@@ -24,12 +24,19 @@ class OnionRouter():
 
 
 class OnionRouterHandler(SocketServer.BaseRequestHandler):
-
-    buffer = 1024
+    key = ""
+    buffer = 4096
 
     def handle(self):
+
+
         cur_thread = threading.current_thread()
         data = self.request.recv(self.buffer)
+
+        if "key" in data:
+            self.key = data["key"]
+            self.request.send(self.key)
+            return
 
         onion = json.loads(data)
 
@@ -43,14 +50,13 @@ class OnionRouterHandler(SocketServer.BaseRequestHandler):
             nodeSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             nodeAddress = ("localhost", onion["IP"])
             nodeSocket.connect(nodeAddress)
-            nodeSocket.send(json.dumps(onion["data"]))
+            nodeSocket.send(onion["data"])
 
             time.sleep(50.0 / 1000.0) # something thread just delete before sending . Slowing the program down
             response = nodeSocket.recv(1024)
             # How does each node know what key to use?
             response = encrypt(response, 1)
             self.request.send(response)
-
         #Message has reached destination
         else:
             print "Destination Reached, Going back"

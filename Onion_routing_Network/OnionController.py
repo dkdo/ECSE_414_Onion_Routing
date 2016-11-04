@@ -14,7 +14,7 @@ import json
 #Put this in functions laters
 
 #Create Graph
-network = generateGraph(100,4)
+network = generateGraph(50,4)
 
 # create proxy server
 proxyHandler = ProxyServer.ProxyServerHandler
