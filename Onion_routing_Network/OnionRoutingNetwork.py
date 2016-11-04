@@ -33,29 +33,26 @@ class OnionRouterHandler(SocketServer.BaseRequestHandler):
         cur_thread = threading.current_thread()
         data = self.request.recv(self.buffer)
 
-        if "key" in data:
-            self.key = data["key"]
+        if self.key == "":
+            self.key = data
             self.request.send(self.key)
             return
 
-        onion = json.loads(data)
-
-        #How does each node know what key to use?
-        onion = decrypt(onion, 1)
+        onion = decrypt(data, self.key)
+        layer = json.loads(data)
 
         #If Still more nodes to traverse
-        if "IP" in onion:
+        if "IP" in layer:
         #Read information
-            print "Sending to", onion["IP"]
+            print "Sending to", layer["IP"]
             nodeSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            nodeAddress = ("localhost", onion["IP"])
+            nodeAddress = ("localhost", layer["IP"])
             nodeSocket.connect(nodeAddress)
-            nodeSocket.send(onion["data"])
+            nodeSocket.send(layer["data"])
 
             time.sleep(50.0 / 1000.0) # something thread just delete before sending . Slowing the program down
             response = nodeSocket.recv(1024)
-            # How does each node know what key to use?
-            response = encrypt(response, 1)
+            response = encrypt(response, self.key)
             self.request.send(response)
         #Message has reached destination
         else:
