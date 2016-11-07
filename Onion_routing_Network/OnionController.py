@@ -22,23 +22,12 @@ proxyServerPort = 150
 proxyServerAddress = ('localhost', proxyServerPort)
 proxyServer = ProxyServer.ThreadedProxyServer(proxyServerAddress, proxyHandler)
 
-# create onion proxy
-proxyOnionHandler = OnionProxy.onionProxyHandler
-proxyOnionPort = 200
-proxyOnionAddress = ('localhost', proxyOnionPort)
-proxyOnion = OnionProxy.ThreadedProxyOnion(proxyOnionAddress, proxyOnionHandler)
-
-
 proxyServerThread = threading.Thread(target = proxyServer.serve_forever)
-proxyOnionThread = threading.Thread(target = proxyOnion.serve_forever)
 
 #Start proxy server
 proxyServerThread.setDaemon(True)  #  close thread when it's done
 proxyServerThread.start()
 
-#Start proxy onion
-proxyOnionThread.setDaemon(True)
-proxyOnionThread.start()
 
 #create nodes for the network graphic
 

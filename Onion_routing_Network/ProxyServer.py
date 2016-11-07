@@ -9,7 +9,7 @@ class ProxyServerHandler(SocketServer.BaseRequestHandler):
     listOfThreadsWaitingForResponse = []
     onionSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # Find way to acquire onion Address
-    onionAddress = ('localhost', 200)
+    onionAddress = ('localhost', 9999)
 
     # TODO
     def validRequest(self,request):

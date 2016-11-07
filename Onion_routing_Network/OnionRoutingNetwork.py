@@ -26,19 +26,30 @@ class OnionRouter():
 class OnionRouterHandler(SocketServer.BaseRequestHandler):
     key = ""
     buffer = 4096
+    onionProxyPort = 9999
+
+    def requestKey(self):
+        # send key to node
+        keySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        keySocket.connect(('localhost', self.onionProxyPort))
+        requestForKey = "requestForKey"
+        keySocket.send(json.dumps(requestForKey))
+       # time.sleep(5 / 100);
+
+        responseForKey = keySocket.recv(self.buffer)
+        self.key = responseForKey
+        keySocket.close()
 
     def handle(self):
-
 
         cur_thread = threading.current_thread()
         data = self.request.recv(self.buffer)
 
-        if self.key == "":
-            self.key = data
-            self.request.send(self.key)
-            return
+        if  self.key == "":
+            self.requestKey()
 
         onion = decrypt(data, self.key)
+        print data
         layer = json.loads(data)
 
         #If Still more nodes to traverse
@@ -48,10 +59,10 @@ class OnionRouterHandler(SocketServer.BaseRequestHandler):
             nodeSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             nodeAddress = ("localhost", layer["IP"])
             nodeSocket.connect(nodeAddress)
-            nodeSocket.send(layer["data"])
+            nodeSocket.send(json.dumps(layer["data"]))
 
             time.sleep(50.0 / 1000.0) # something thread just delete before sending . Slowing the program down
-            response = nodeSocket.recv(1024)
+            response = nodeSocket.recv(self.buffer)
             response = encrypt(response, self.key)
             self.request.send(response)
         #Message has reached destination
