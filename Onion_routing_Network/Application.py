@@ -1,5 +1,7 @@
 import socket
 import json
+import time
+
 
 class Application:
     port = 0
@@ -17,6 +19,7 @@ class Application:
 
     def connectToServer(self):
 
+        start_time = time.time()
         self.clientSocket.connect(self.serverAddress)
         try:
             self.clientSocket.sendall(self.message)
@@ -26,3 +29,5 @@ class Application:
         finally:
             self.clientSocket.close()
             print "Closed socket\n"
+            elapsed_time = time.time() - start_time
+            print "Time elapsed: ", elapsed_time
