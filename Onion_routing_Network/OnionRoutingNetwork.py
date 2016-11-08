@@ -49,7 +49,6 @@ class OnionRouterHandler(SocketServer.BaseRequestHandler):
             self.requestKey()
 
         onion = decrypt(data, self.key)
-        print data
         layer = json.loads(data)
 
         #If Still more nodes to traverse

@@ -10,4 +10,8 @@ def decrypt (data, key):
 
 
 def generateKeys(numberOfNodes):
-    return 1
+    list = []
+    for i in range(numberOfNodes):
+        list.append(i)
+    return list
+

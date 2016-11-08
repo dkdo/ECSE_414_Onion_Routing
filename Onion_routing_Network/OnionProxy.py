@@ -10,8 +10,8 @@ import json
 buffer = 4096
 host = 'localhost'
 port = 9999
-keyList =["500"]
-
+keyList = ["500"]
+count = -1
 
 
 def validRequest(request):
@@ -34,29 +34,30 @@ def peelOnion(request, onion):
     return onion
 
 def assembleOnion(request):
-
     onion = encrypt(request["Message"], keyList[0])
-    i = 0
+    i = 1
     # create onion
     for IP in (request["Path"][1:][::-1]):
         # Create onion layer
-        onion = encrypt({"IP": IP, "data": onion}, keyList[0])
+        onion = encrypt({"IP": IP, "data": onion}, keyList[i])
         i += 1
     onion = {"IP": request["Path"][0], "data": onion}
     return onion
 
 def OnionProxyHandler(clientSocket,client_address):
+    global keyList
     data = clientSocket.recv(buffer)
     print "Received request from the Proxy Server\n"
-    #self.keyList = generateKeys(len(data["Path"]))
     message = json.loads(data)
     process = validRequest(message)
 
     if message  == "requestForKey":
-        response = keyList[0]
-        clientSocket.send(response)
+        response = keyList[count]
+        print "Send key", response, "to", client_address
+        clientSocket.send(str(response))
 
     elif process:
+        keyList = generateKeys(len(message["Path"]) + 1)
         onion = assembleOnion(message)
         response = sendToEntryFunnel(onion)
         response = peelOnion(message, response)
@@ -78,4 +79,5 @@ if __name__=='__main__':
     while 1:
         clientSocket, client_address = serverSocket.accept()
         print "connected to", client_address
+        count += 1
         thread.start_new_thread(OnionProxyHandler, (clientSocket,client_address))
