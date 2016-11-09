@@ -48,17 +48,20 @@ class OnionRouterHandler(SocketServer.BaseRequestHandler):
         if  self.key == "":
             self.requestKey()
 
+        print "Current Message:", data
+
+
         onion = decrypt(data, self.key)
-        layer = json.loads(data)
+        layers = onion.split("~")
 
         #If Still more nodes to traverse
-        if "IP" in layer:
+        if len(layers) > 1:
         #Read information
-            print "Sending to", layer["IP"]
+            print "Sending to", layers[0]
             nodeSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            nodeAddress = ("localhost", layer["IP"])
+            nodeAddress = ("localhost", int(layers[0]))
             nodeSocket.connect(nodeAddress)
-            nodeSocket.send(json.dumps(layer["data"]))
+            nodeSocket.send("~".join(layers[1::]))
 
             time.sleep(50.0 / 1000.0) # something thread just delete before sending . Slowing the program down
             response = nodeSocket.recv(self.buffer)
@@ -66,8 +69,10 @@ class OnionRouterHandler(SocketServer.BaseRequestHandler):
             self.request.send(response)
         #Message has reached destination
         else:
+            print "----------------------------------------------------"
             print "Destination Reached, Going back"
-            response = "Data has reach dest node"
+            print "Recieved Message at Terminal Node:", onion
+            response = encrypt("Data has reach dest node", self.key)
             self.request.send(response)
 
 

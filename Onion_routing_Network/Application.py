@@ -25,7 +25,7 @@ class Application:
             self.clientSocket.sendall(self.message)
             response = self.clientSocket.recv(1024)
             response = json.loads(response)
-            print "Received: {}".format(response)
+            print "Received Message at Application: {}".format(response)
         finally:
             self.clientSocket.close()
             print "Closed socket\n"

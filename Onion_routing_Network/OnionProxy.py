@@ -7,6 +7,7 @@ from Encrypt import encrypt, decrypt, generateKeys
 import json
 
 
+
 buffer = 4096
 host = 'localhost'
 port = 9999
@@ -22,24 +23,26 @@ def sendToEntryFunnel( data):
     entryFunnelAddress = ('localhost', data["IP"])
     entrySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     entrySocket.connect(entryFunnelAddress)
-    entrySocket.send(json.dumps(data["data"]))
+    print "To be sent" , data["data"]
+    entrySocket.send(data["data"])
 
     time.sleep(50.0 / 1000.0);  # sometime thread just delete before sending . Slowing the program down
     response = entrySocket.recv(buffer)
     return response
 
 def peelOnion(request, onion):
-    for key in request["Path"]:
+    for key in keyList[1::]:
         onion = decrypt(onion, key)
     return onion
 
 def assembleOnion(request):
-    onion = encrypt(request["Message"], keyList[0])
+    flippedKeys = keyList[::-1]
+    onion = encrypt(request["Message"], flippedKeys[0])
     i = 1
     # create onion
     for IP in (request["Path"][1:][::-1]):
         # Create onion layer
-        onion = encrypt({"IP": IP, "data": onion}, keyList[i])
+        onion = encrypt(str(IP) + "~" + onion, flippedKeys[i])
         i += 1
     onion = {"IP": request["Path"][0], "data": onion}
     return onion
@@ -57,7 +60,7 @@ def OnionProxyHandler(clientSocket,client_address):
         clientSocket.send(str(response))
 
     elif process:
-        keyList = generateKeys(len(message["Path"]) + 1)
+        keyList = generateKeys(len(message["Path"]) + 1)[::1]
         onion = assembleOnion(message)
         response = sendToEntryFunnel(onion)
         response = peelOnion(message, response)

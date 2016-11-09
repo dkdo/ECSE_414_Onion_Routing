@@ -14,7 +14,7 @@ import json
 #Put this in functions laters
 
 #Create Graph
-network = generateGraph(100,4)
+network = generateGraph(50,4)
 
 # create proxy server
 proxyHandler = ProxyServer.ProxyServerHandler
@@ -39,7 +39,7 @@ for key in network:
 # create Client
 clientPort = 300
 
-#Choose a random port as destination and add it to the message (default start is 0)
+#Choose a random port as destination and add it to the message (default start is 1)
 dest = random.randint(2,len(network))
 
 path = RandomWalk.randomWalk(network,1,dest)
