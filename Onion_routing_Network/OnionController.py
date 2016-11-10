@@ -6,7 +6,7 @@ import Application
 import OnionRoutingNetwork
 import random
 import RandomWalk
-from Graph import generateGraph, findPaths
+from Graph import generateGraph,shortest_path, findPaths
 from GraphGenerator import generate_graph
 import json
 
@@ -42,23 +42,30 @@ for key in network:
 
 # create Client
 clientPort = 300
+client2Port = 500
 
 #Choose a random port as destination and add it to the message (default start is 1)
 dest = random.randint(2,len(network))
 
-path = RandomWalk.randomWalk(network,1,dest)
-print "Sending message through", path
+randomPath = RandomWalk.randomWalk(network, 1, dest)
+print "Sending message through", randomPath
 
 message = "Is this a potato?"
 
-data = {"Path" : path , "Message" : message}
+data = {"Path" : randomPath , "Message" : message}
 
 send = json.dumps(data);
 
 client = Application.Application(clientPort,proxyServerAddress,send)
 client.connectToServer()
 
-print threading.active_count()
+shortestPath = shortest_path(network, 1, dest)
+print "Sending message with shortest path : ", len(randomPath)
+
+#client2 = Application.Application(client2Port,proxyServerAddress,send)
+#client2.connectToServer()
+
+
 
 #client2 = Application.Application(clientPort,proxyServerAddress,message)
 #client2.connectToServer()

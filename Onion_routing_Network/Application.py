@@ -8,8 +8,7 @@ class Application:
     clientAddress = ()
     serverAddress =()
     message = ""
-    clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    buffer = 1024
+    buffer = 4096
 
     def __init__(self,port,serverAddress,message):
         self.port = port
@@ -19,15 +18,16 @@ class Application:
 
     def connectToServer(self):
 
+        clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         start_time = time.time()
-        self.clientSocket.connect(self.serverAddress)
+        clientSocket.connect(self.serverAddress)
         try:
-            self.clientSocket.sendall(self.message)
-            response = self.clientSocket.recv(1024)
+            clientSocket.sendall(self.message)
+            response = clientSocket.recv(self.buffer)
             response = json.loads(response)
             print "Received Message at Application: {}".format(response)
         finally:
-            self.clientSocket.close()
+            clientSocket.close()
             print "Closed socket\n"
             elapsed_time = time.time() - start_time
             print "Time elapsed: ", elapsed_time
