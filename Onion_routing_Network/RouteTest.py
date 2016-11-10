@@ -12,4 +12,5 @@ print "dest : " + str(dest)
 
 
 
-print RandomWalk.randomWalk(graph,src,dest)
+print "random walk path is :", RandomWalk.randomWalk(graph,src,dest)
+print "shortest path: ", G.shortest_path(graph,src,dest)

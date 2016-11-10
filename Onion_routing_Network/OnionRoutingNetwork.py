@@ -21,8 +21,6 @@ class OnionRouter():
         OnionRouterThread.setDaemon(True)  # close thread when it's done
         OnionRouterThread.start()
 
-
-
 class OnionRouterHandler(SocketServer.BaseRequestHandler):
     key = ""
     buffer = 4096
@@ -60,7 +58,7 @@ class OnionRouterHandler(SocketServer.BaseRequestHandler):
             print "Sending to", layers[0]
             nodeSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             nodeAddress = ("localhost", int(layers[0]))
-            print nodeAddress
+            #print nodeAddress
             nodeSocket.connect(nodeAddress)
 
             nodeSocket.send("~".join(layers[1::]))

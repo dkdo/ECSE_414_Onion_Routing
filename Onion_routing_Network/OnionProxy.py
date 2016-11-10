@@ -12,7 +12,7 @@ buffer = 4096
 host = 'localhost'
 port = 9999
 keyList = ["500"]
-count = -1
+count = 1
 
 
 def validRequest(request):
@@ -26,7 +26,7 @@ def sendToEntryFunnel( data):
     #print "To be sent" , data["data"]
     entrySocket.send(data["data"])
 
-    time.sleep(50.0 / 1000.0);  # sometime thread just delete before sending . Slowing the program down
+    time.sleep(5 / 1000);  # sometime thread just delete before sending . Slowing the program down
     response = entrySocket.recv(buffer)
     return response
 
@@ -49,6 +49,8 @@ def assembleOnion(request):
 
 def OnionProxyHandler(clientSocket,client_address):
     global keyList
+    global count
+
     data = clientSocket.recv(buffer)
     print "Received request from the Proxy Server\n"
     message = json.loads(data)
@@ -56,6 +58,7 @@ def OnionProxyHandler(clientSocket,client_address):
 
     if message  == "requestForKey":
         response = keyList[count]
+        count += 1
         print "Send key", response, "to", client_address
         clientSocket.send(str(response))
 
@@ -64,6 +67,7 @@ def OnionProxyHandler(clientSocket,client_address):
         onion = assembleOnion(message)
         response = sendToEntryFunnel(onion)
         response = peelOnion(message, response)
+        count = 1
         clientSocket.send(json.dumps(response))
 
     else:
@@ -82,5 +86,4 @@ if __name__=='__main__':
     while 1:
         clientSocket, client_address = serverSocket.accept()
         print "connected to", client_address
-        count += 1
         thread.start_new_thread(OnionProxyHandler, (clientSocket,client_address))

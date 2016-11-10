@@ -18,7 +18,7 @@ import json
 #network = generateGraph(20,4)
 network = generate_graph("twenty_nodes.brite")
 
-print  "This is the network: ", network
+#print  "This is the network: ", network
 
 # create proxy server
 proxyHandler = ProxyServer.ProxyServerHandler
@@ -49,6 +49,7 @@ dest = random.randint(2,len(network))
 
 randomPath = RandomWalk.randomWalk(network, 1, dest)
 print "Sending message through", randomPath
+print "Number of Nodes traversed by random walk: ", len(randomPath)
 
 message = "Is this a potato?"
 
@@ -60,12 +61,11 @@ client = Application.Application(clientPort,proxyServerAddress,send)
 client.connectToServer()
 
 shortestPath = shortest_path(network, 1, dest)
-print "Sending message with shortest path : ", len(randomPath)
+print "Sending message with shortest path : ", shortestPath
+print "Number of nodes traversed by shortest path: ", len(shortestPath)
 
-#client2 = Application.Application(client2Port,proxyServerAddress,send)
-#client2.connectToServer()
+dataOfShortestPath = {"Path" : shortestPath , "Message" : message}
+sendToShortestPath = json.dumps(dataOfShortestPath)
 
-
-
-#client2 = Application.Application(clientPort,proxyServerAddress,message)
-#client2.connectToServer()
+client2 = Application.Application(client2Port,proxyServerAddress,sendToShortestPath)
+client2.connectToServer()
