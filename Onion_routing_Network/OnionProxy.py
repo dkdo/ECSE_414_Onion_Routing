@@ -23,7 +23,7 @@ def sendToEntryFunnel( data):
     entryFunnelAddress = ('localhost', data["IP"])
     entrySocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     entrySocket.connect(entryFunnelAddress)
-    print "To be sent" , data["data"]
+    #print "To be sent" , data["data"]
     entrySocket.send(data["data"])
 
     time.sleep(50.0 / 1000.0);  # sometime thread just delete before sending . Slowing the program down

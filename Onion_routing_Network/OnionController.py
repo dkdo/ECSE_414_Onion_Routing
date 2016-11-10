@@ -7,6 +7,7 @@ import OnionRoutingNetwork
 import random
 import RandomWalk
 from Graph import generateGraph, findPaths
+from GraphGenerator import generate_graph
 import json
 
 #Need capability to write raw input into functions (later)
@@ -14,7 +15,10 @@ import json
 #Put this in functions laters
 
 #Create Graph
-network = generateGraph(50,4)
+#network = generateGraph(20,4)
+network = generate_graph("twenty_nodes.brite")
+
+print  "This is the network: ", network
 
 # create proxy server
 proxyHandler = ProxyServer.ProxyServerHandler
