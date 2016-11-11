@@ -11,14 +11,17 @@ def generate_graph(brite_file):
                 # the wanted line will be similar to Nodes: ( 5 )
                 if token.isdigit():
                     for i in range(1, int(token) + 1):
-                        graph[i] = []
+                        graph[i] = {'nodes': [],
+                                    'length': []}
                     break
         if edge_reading:
             # the edges are stored as:
             # edgeid from_node to_node etc...
             tokens = line.split()
-            graph[int(tokens[1]) + 1].append(int(tokens[2]) + 1)
-            graph[int(tokens[2]) + 1].append(int(tokens[1]) + 1)
+            graph[int(tokens[1]) + 1]['nodes'].append(int(tokens[2]) + 1)
+            graph[int(tokens[1]) + 1]['length'].append(float(tokens[3]))
+            graph[int(tokens[2]) + 1]['nodes'].append(int(tokens[1]) + 1)
+            graph[int(tokens[2]) + 1]['length'].append(float(tokens[3]))
         if 'Edges:' in line:
             edge_reading = True
         if '\n' == line:
