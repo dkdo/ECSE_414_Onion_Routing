@@ -65,40 +65,37 @@ def shortest_path1(graph, src, dest, path=[],counter=0):
 
 
 def shortest_path(graph, src, dest):
-  visited = {src: 0}
-  path = {}
+    visited = {src: 0}
+    path = {}
 
-  nodes = set(graph)
+    nodes = set(graph)
 
-  while nodes:
-    min_node = None
-    for node in nodes:
-      if node in visited:
+    while nodes:
+        min_node = None
+        for node in nodes:
+            if node in visited:
+                if min_node is None:
+                    min_node = node
+                elif visited[node] < visited[min_node]:
+                    min_node = node
+
         if min_node is None:
-          min_node = node
-        elif visited[node] < visited[min_node]:
-          min_node = node
+            break
 
-    if min_node is None:
-      break
+        nodes.remove(min_node)
+        current_weight = visited[min_node]
 
-    nodes.remove(min_node)
-    current_weight = visited[min_node]
+        for edge in graph[min_node]['nodes']:
+            index = graph[min_node]['nodes'].index(edge)
+            weight = current_weight + graph[min_node]['length'][index]
+            if edge not in visited or weight < visited[edge]:
+                visited[edge] = weight
+                path[edge] = min_node
 
-    for edge in graph[min_node]:
-      weight = current_weight + 1 #assume weight of 1 per edge
-      if edge not in visited or weight < visited[edge]:
-        visited[edge] = weight
-        path[edge] = min_node
+    curNode = dest
+    shortest = [curNode]
+    while curNode != src:
+        curNode = path[curNode]
+        shortest.insert(0, curNode)
 
-
-  curNode = dest
-  shortest = [curNode]
-  while curNode != src:
-    curNode = path[curNode]
-    shortest.insert(0, curNode)
-
-
-  return shortest
-
-   
+    return shortest
