@@ -27,8 +27,8 @@ def randomWalk( G , SRC , DEST ):
         Next = random.choice(("RandWalkFromSrc", "RandWalkFromDest"))
         
         if (Next == "RandWalkFromSrc"):
-            maxNeighbors = len(G[X])
-            Z = G[X][random.randint(0,maxNeighbors-1)]    # Randomly select an adjacent node from X
+            maxNeighbors = len(G[X]['nodes'])
+            Z = G[X]['nodes'][random.randint(0,maxNeighbors-1)]    # Randomly select an adjacent node from X
             shortest_path_ZtoY = graphUtils.shortest_path(G,Z,Y)
             shortest_path = shortest_path_ZtoY[1:len(shortest_path_ZtoY)-1]
             TotalNumberHops = 1 + LengthFromSrc + LengthFromDest + len(shortest_path)
@@ -45,8 +45,8 @@ def randomWalk( G , SRC , DEST ):
             LengthFromSrc+=1
 
         else: # Next = RandWalkFromDest
-            maxNeighbors = len(G[Y])
-            Z = G[Y][random.randint(0,maxNeighbors-1)]    # Randomly select an adjacent node from X
+            maxNeighbors = len(G[Y]['nodes'])
+            Z = G[Y]['nodes'][random.randint(0,maxNeighbors-1)]    # Randomly select an adjacent node from X
             shortest_path_ZtoX = graphUtils.shortest_path(G,X,Z)
             shortest_path = shortest_path_ZtoX[1:len(shortest_path_ZtoX)-1]
             TotalNumberHops = 1 + LengthFromSrc + LengthFromDest + len(shortest_path)
